@@ -1,0 +1,52 @@
+const express = require("express") 
+const bodyParser = require("body-parser") 
+const cors = require("cors") 
+const app = express() 
+
+app.use(bodyParser.json())
+
+app.use(bodyParser.urlencoded({extended: true}))
+
+app.use(cors())
+
+app.post('/konversi', (req, res) => {
+  const { satuanawal, nilai } = req.body;
+
+  if (!satuanawal || isNaN(nilai)) {
+    return res.status(400).json({ error: 'Parameter satuanAwal dan nilai harus diisi.' });
+  }
+
+function konversiUkuran(ukuranawal, nilai) {
+
+    let ukuranmm;
+  
+    if (ukuranawal === 'mm') {
+      ukuranmm = nilai;
+    } else if (ukuranawal === 'cm') {
+      ukuranmm = nilai * 10;
+    } else if (ukuranawal === 'dm') {
+      ukuranDalamMm = nilai * 100;
+    } else if (ukuranawal === 'm') {
+      ukuranmm = nilai * 1000;
+    } else if (ukuranawal === 'km') {
+      ukuranmm = nilai * 1000000;
+    } else {
+      return { error: 'Satuan ukuran awal tidak valid. Gunakan "mm", "cm", "dm", "m", atau "km".' };
+    }
+  
+    const mm = ukuranmm;
+    const cm = mm / 10;
+    const dm = mm / 100;
+    const m = mm / 1000;
+    const km = mm / 1000000;
+  
+    return { mm, cm, dm, m, km };
+  }
+  
+    const hasilKonversi = konversiUkuran(satuanawal, nilai);
+    res.json(hasilKonversi);
+  });
+
+app.listen(1213, () => {
+    console.log("Server run on port 1213");
+})
